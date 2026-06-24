@@ -1,0 +1,47 @@
+# docker-compose para subir MySQL + a aplicacao.
+#
+# IMPORTANTE: o simulador roda com --network=host e expoe /garage na porta 3000
+# do host, e envia eventos para http://localhost:3003/webhook. Para a app
+# conseguir falar com o simulador (localhost do host) e receber o webhook na
+# porta 3003 do host, ela tambem usa network_mode: host.
+#
+# Em Windows/Mac o network_mode: host tem limitacoes no Docker Desktop; veja o
+# README para a alternativa de rodar a app via Maven no host (recomendado nessas
+# plataformas) mantendo apenas o MySQL no compose.
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: estapar-mysql
+    network_mode: host
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: estapar
+      MYSQL_USER: estapar
+      MYSQL_PASSWORD: estapar
+    # network_mode host: MySQL escuta na 3306 do host
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+  app:
+    build: .
+    container_name: estapar-app
+    network_mode: host
+    depends_on:
+      mysql:
+        condition: service_healthy
+    environment:
+      DB_HOST: 127.0.0.1
+      DB_PORT: "3306"
+      DB_NAME: estapar
+      DB_USER: estapar
+      DB_PASSWORD: estapar
+      SIMULATOR_BASE_URL: http://localhost:3000
+
+volumes:
+  mysql-data:

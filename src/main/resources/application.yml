@@ -1,0 +1,41 @@
+server:
+  port: 3003
+
+spring:
+  application:
+    name: estapar-parking
+
+  datasource:
+    url: jdbc:mysql://${DB_HOST:localhost}:${DB_PORT:3306}/${DB_NAME:estapar}?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: ${DB_USER:estapar}
+    password: ${DB_PASSWORD:estapar}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: validate        
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+simulator:
+  base-url: ${SIMULATOR_BASE_URL:http://localhost:3000}
+  bootstrap-enabled: ${SIMULATOR_BOOTSTRAP_ENABLED:true}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health
+  endpoint:
+    health:
+      show-details: never
+
+logging:
+  level:
+    com.estapar.parking: INFO
