@@ -50,7 +50,7 @@ public class ParkingService {
 
         if (total > 0 && occupied >= total) {
             throw new GarageFullException(
-                    "Estacionamento lotado. Entrada de " + event.licensePlate() + " recusada.");
+                    "Estacionamento lotado. Entrada do veículo de placa " + event.licensePlate() + " recusada.");
         }
 
         BigDecimal factor = pricingService.dynamicPriceFactor(occupied, total);
