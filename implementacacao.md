@@ -1,4 +1,4 @@
-# Resumo de Implementação do Projeto Estapar Parking
+# Resumo da Implementação do Sistema
 
 Este documento descreve o que foi implementado no projeto backend de estacionamento.
 
@@ -18,7 +18,7 @@ O sistema gerencia o ciclo de estacionamento de veículos com as seguintes respo
 - Spring Web
 - Spring Data JPA
 - Flyway
-- MySQL (produção)
+- MySQL
 - H2 (testes)
 - Maven
 
@@ -54,7 +54,7 @@ O projeto segue uma separação em camadas:
 
 #### ENTRY
 
-- Verifica se já existe uma sessão aberta para a placa; se existir, retorna erro de negócio.
+- Verifica se já existe uma sessão aberta para a placa; se existir, retorna erro.
 - Calcula o fator dinâmico de preço baseado na ocupação atual:
   - < 25% ocupação → desconto de 10% (`0.90`);
   - 25%–50% ocupação → preço normal (`1.00`);
@@ -65,18 +65,18 @@ O projeto segue uma separação em camadas:
 
 #### PARKED
 
-- Localiza sessão aberta para a placa; se não existir, lança erro de negócio.
+- Localiza sessão aberta para a placa; se não existir, retorna erro.
 - Encontra a vaga pela latitude/longitude informada.
 - Verifica se a vaga existe e se não está ocupada.
-- Verifica lotação do setor da vaga; se o setor estiver 100% ocupado, rejeita com `GarageFullException`.
+- Verifica lotação do setor da vaga, se o setor estiver 100% ocupado, rejeita com `GarageFullException`.
 - Marca a vaga como ocupada, associa a vaga e o setor à sessão, define `parkedTime` e atualiza para status `PARKED`.
 
 #### EXIT
 
-- Localiza sessão aberta para a placa; se não existir, lança erro de negócio.
+- Localiza sessão aberta para a placa; se não existir, lança erro.
 - Calcula o valor a cobrar usando `PricingService.calculateAmount(...)`:
-  - primeiros 30 minutos grátis;
-  - após 30 minutos, cobra por hora cheia, com arredondamento para cima;
+  - primeiros 30 minutos grátis
+  - após 30 minutos, cobra por hora cheia, com arredondamento para cima
   - usa `basePrice` do setor e o multiplicador dinâmico de entrada.
   - caso o veículo saia sem registrar o evento de estacionamento (`PARKED`), a sessão é encerrada com tarifa zero (`0.00`).
 - Libera a vaga ocupada (`occupied = false`).
@@ -102,9 +102,9 @@ O projeto segue uma separação em camadas:
 - Exceções de negócio são tratadas por `GlobalExceptionHandler`.
 - Há exceções específicas como `GarageFullException` e `BusinessException`.
 - O serviço valida:
-  - duplicidade de sessão aberta;
-  - loteamento total do estacionamento;
-  - lotação do setor no momento do `PARKED`;
+  - duplicidade de sessão aberta
+  - loteamento total do estacionamento
+  - lotação do setor no momento do `PARKED`
   - inexistência de vaga ou sessão aberta.
 
 ## 8. Banco de dados e persistência
