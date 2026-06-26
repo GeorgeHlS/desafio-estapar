@@ -1,14 +1,3 @@
-# docker-compose para subir MySQL + a aplicacao.
-#
-# IMPORTANTE: o simulador roda com --network=host e expoe /garage na porta 3000
-# do host, e envia eventos para http://localhost:3003/webhook. Para a app
-# conseguir falar com o simulador (localhost do host) e receber o webhook na
-# porta 3003 do host, ela tambem usa network_mode: host.
-#
-# Em Windows/Mac o network_mode: host tem limitacoes no Docker Desktop; veja o
-# README para a alternativa de rodar a app via Maven no host (recomendado nessas
-# plataformas) mantendo apenas o MySQL no compose.
-
 services:
   mysql:
     image: mysql:8.0
