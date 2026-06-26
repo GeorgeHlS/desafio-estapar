@@ -207,9 +207,11 @@ a cobertura linha-a-linha de cada classe.
    - **O que testa:** Lógica de processamento de eventos (ENTRY, PARKED, EXIT)
    - **Cenários:**
      - **ENTRY:** recusa se já existe sessão aberta (mesmo prato)
-     - **ENTRY:** recusa se setor lotado (409 Conflict)
+     - **ENTRY:** recusa se estacionamento lotado (409 Conflict)
+     - **PARKED:** recusa se setor lotado (409 Conflict)
      - **PARKED:** marca vaga como ocupada, cria sessão
      - **EXIT:** calcula tarifa, libera vaga, fecha sessão
+     - **EXIT:** sem evento PARKED prévio encerra a sessão com tarifa zero
      - Validações: placa inválida, vaga inexistente, sessão não encontrada
      - Exceções customizadas (`GarageFullException`, `BusinessException`)
 
@@ -291,6 +293,7 @@ mvn surefire-report:report
   - `< 50%` → 0% (fator 1.00)
   - `< 75%` → +10% (fator 1.10)
   - `<= 100%` → +25% (fator 1.25)
-- **Lotação 100%** → setor fechado; novas entradas recusadas até liberar vaga
-  (HTTP 409).
-- Entrada marca vaga como ocupada; saída libera a vaga e calcula o valor.
+- **Lotação 100% do estacionamento** → novas entradas (ENTRY) recusadas até liberar vaga (HTTP 409).
+- **Lotação 100% do setor** → setor fechado para estacionamento (PARKED) (HTTP 409).
+- Entrada (ENTRY) cria a sessão; estacionar (PARKED) marca vaga como ocupada e associa o setor; saída (EXIT) libera a vaga e calcula o valor.
+- **Saída sem estacionar** → se um veículo entra e sai sem registrar o evento PARKED, a sessão é encerrada com tarifa zero (`0.00`).
