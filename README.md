@@ -1,7 +1,7 @@
-# Estapar — Sistema de Estacionamento (Backend)
+# Sistema de Estacionamento (Backend)
 
-Sistema backend para gerenciar um estacionamento: controla vagas, processa
-eventos de entrada/saída de veículos e calcula receita por setor.
+Esse projeto consiste em um sistema backend para gerenciar um estacionamento com as seguintes funcionalidades: controle de vagas, processamento de
+eventos de entrada/saída de veículos e cálculo de receita por setor.
 
 ## Stack
 
