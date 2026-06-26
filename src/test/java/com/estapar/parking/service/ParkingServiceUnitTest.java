@@ -73,8 +73,7 @@ class ParkingServiceUnitTest {
                 "BBB2222", SessionStatus.EXITED))
                 .willReturn(Optional.empty());
         given(spotRepository.count()).willReturn(1L);
-        given(spotRepository.findAll()).willReturn(List.of(
-                Spot.builder().occupied(true).build()));
+        given(spotRepository.countByOccupiedTrue()).willReturn(1L);
 
         assertThatThrownBy(() -> parkingService.handleEntry(
                         new com.estapar.parking.web.dto.EntryEvent("BBB2222", at(10, 0), "ENTRY")))
@@ -90,8 +89,7 @@ class ParkingServiceUnitTest {
                 "CCC3333", SessionStatus.EXITED))
                 .willReturn(Optional.empty());
         given(spotRepository.count()).willReturn(2L);
-        given(spotRepository.findAll()).willReturn(List.of(
-                Spot.builder().occupied(true).build()));
+        given(spotRepository.countByOccupiedTrue()).willReturn(1L);
         given(sessionRepository.save(any(ParkingSession.class)))
                 .willAnswer(invocation -> invocation.getArgument(0));
 

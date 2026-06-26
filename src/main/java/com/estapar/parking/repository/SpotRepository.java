@@ -11,6 +11,8 @@ import java.util.Optional;
 
 public interface SpotRepository extends JpaRepository<Spot, Long> {
 
+    long countByOccupiedTrue();
+
     long countBySectorIdAndOccupiedTrue(Long sectorId);
 
     long countBySectorId(Long sectorId);

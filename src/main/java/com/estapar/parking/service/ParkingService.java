@@ -46,7 +46,7 @@ public class ParkingService {
                 });
 
         long total = spotRepository.count();
-        long occupied = spotRepository.findAll().stream().filter(Spot::isOccupied).count();
+        long occupied = spotRepository.countByOccupiedTrue();
 
         if (total > 0 && occupied >= total) {
             throw new GarageFullException(
