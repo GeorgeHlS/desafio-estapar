@@ -32,14 +32,12 @@ exception/     -> exceções de domínio
 | GET    | `/revenue?date=YYYY-MM-DD&sector=A` | Faturamento total do setor na data     |
 | GET    | `/actuator/health`                | Health check                           |
 
-A aplicação sobe na porta **3003** (mesma do webhook, conforme enunciado).
-
 ---
 
 ## Pré-requisitos
 
-- Docker (para o simulador e, opcionalmente, MySQL)
-- JDK 21 e Maven (se for rodar a app fora do container)
+- Docker (para o simulador e MySQL)
+- JDK 21 e Maven
 
 ---
 
@@ -67,7 +65,7 @@ docker compose up --build
 Isso sobe o MySQL (porta 3306 do host) e a aplicação (porta 3003 do host),
 que já consegue falar com o simulador em `localhost:3000`.
 
-### Opção B — Windows / macOS (recomendada nessas plataformas)
+### Opção B — Windows / macOS
 
 No Docker Desktop o `network_mode: host` é limitado. O caminho mais simples é
 subir **apenas o MySQL** em container e rodar a **app pelo Maven** no host:
@@ -94,7 +92,7 @@ mvn spring-boot:run
 ## Como testar manualmente
 
 Com simulador + app no ar, os eventos chegam sozinhos no webhook. Para testar
-à mão:
+manualmente:
 
 ```bash
 # Consultar a config da garagem (vinda do simulador)
@@ -103,17 +101,17 @@ curl http://localhost:3000/garage
 # Simular um ENTRY
 curl -X POST http://localhost:3003/webhook \
   -H "Content-Type: application/json" \
-  -d '{"license_plate":"ZUL0001","entry_time":"2025-01-01T12:00:00.000Z","event_type":"ENTRY"}'
+  -d '{"license_plate":"ABC1234","entry_time":"2025-01-01T12:00:00.000Z","event_type":"ENTRY"}'
 
 # Simular o PARKED (use lat/lng de uma vaga real do /garage)
 curl -X POST http://localhost:3003/webhook \
   -H "Content-Type: application/json" \
-  -d '{"license_plate":"ZUL0001","lat":-23.561684,"lng":-46.655981,"event_type":"PARKED"}'
+  -d '{"license_plate":"ABC1234","lat":-23.561684,"lng":-46.655981,"event_type":"PARKED"}'
 
 # Simular o EXIT
 curl -X POST http://localhost:3003/webhook \
   -H "Content-Type: application/json" \
-  -d '{"license_plate":"ZUL0001","exit_time":"2025-01-01T14:00:00.000Z","event_type":"EXIT"}'
+  -d '{"license_plate":"ABC1234","exit_time":"2025-01-01T14:00:00.000Z","event_type":"EXIT"}'
 
 # Consultar o faturamento
 curl "http://localhost:3003/revenue?date=2025-01-01&sector=A"
