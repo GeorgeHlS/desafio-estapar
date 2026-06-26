@@ -60,7 +60,7 @@ O projeto segue uma separação em camadas:
   - 25%–50% ocupação → preço normal (`1.00`);
   - 50%–75% ocupação → aumento de 10% (`1.10`);
   - ≥ 75% ocupação → aumento de 25% (`1.25`).
-- Se todas as vagas estiverem ocupadas, lança `GarageFullException`.
+- Se todas as vagas do estacionamento inteiro estiverem ocupadas, lança `GarageFullException`.
 - Persiste uma nova sessão de estacionamento com status `ENTERED` e o fator de preço definido no momento da entrada.
 
 #### PARKED
@@ -78,6 +78,7 @@ O projeto segue uma separação em camadas:
   - primeiros 30 minutos grátis;
   - após 30 minutos, cobra por hora cheia, com arredondamento para cima;
   - usa `basePrice` do setor e o multiplicador dinâmico de entrada.
+  - caso o veículo saia sem registrar o evento de estacionamento (`PARKED`), a sessão é encerrada com tarifa zero (`0.00`).
 - Libera a vaga ocupada (`occupied = false`).
 - Atualiza a sessão com `exitTime`, `amountCharged` e status `EXITED`.
 
